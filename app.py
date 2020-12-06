@@ -50,7 +50,7 @@ def should_send_reminder(label_ann):
     #global last_time_water_running
     for label in label_ann:
         desc = str(label.description).lower()
-        print("LOOKING...")
+        print("LOOKING... " +desc + ","+str(label.score))
         if ('finger' in desc or 'hand' in desc or 'dog' in desc or 'paw' in desc or 'cat' in desc or 'toe' in desc) and label.score>=90.000:
             print("OBSTRUCTION FOUND")
             session['last_time_water_running'] = -1
@@ -85,4 +85,5 @@ def image_helper_google(image):
 
 if __name__ == '__main__':
     #image_helper_google('test.jpg')
+    session['last_time_water_running'] = -1
     app.run()
