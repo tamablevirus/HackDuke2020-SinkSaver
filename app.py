@@ -60,7 +60,6 @@ def should_send_reminder(label_ann):
                     last_time_water_running = -1
                     return True
 
-
 def image_helper_google(image):
     resp = client.annotate_image({
   'image': {'source': {'image_uri': 'https://sink-saver.herokuapp.com/image/'+image}},
