@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request,url_for, send_file
 import csv
 import os
 import sys 
@@ -12,13 +12,18 @@ base = os.getcwd()
 
 @app.route('/')
 def hello_world():
-    client = vision.ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient.from_service_account_file(
+        os.path.normpath(os.path.normpath(base + '/sinksaver-82c12b4843e4.json')))
     response = client.annotate_image({
-        'image' : {'source' : {'image_uri' : "./test.jpg"}}
+        'image' : {'source' : {'image_uri' : "https://sink-saver.herokuapp.com/image"}}
     })
     print(response, flush=True)
     return 'Hello World!'
 
+
+@app.route("/image", methods=["GET"])
+def getImage():
+    return send_file("test.jpg", mimetype="image")
 @app.route("/upload", methods=["POST"])
 def upload():
     image_helper_google(request.files['image'])
