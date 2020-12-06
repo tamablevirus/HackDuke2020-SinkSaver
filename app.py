@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.secret_key = "asdfasfdasfdsafasddfsadfasdfsadfdas"
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 base = os.getcwd()
-app.config['UPLOAD_FOLDER'] = base
+app.config['UPLOAD_FOLDER'] = base +'/static'
 
 client = vision.ImageAnnotatorClient.from_service_account_file(
     os.path.normpath(os.path.normpath(base + '/sinksaver-82c12b4843e4.json')))
@@ -26,14 +26,14 @@ def hello_world():
 
 @app.route("/image/<name>", methods=["GET"])
 def getImage(name):
-    return send_file(name, mimetype="image")
+    return send_file(app.config['UPLOAD_FOLDER']+'/'+name, mimetype="image")
 @app.route("/upload", methods=["POST"])
 def upload():
     print(request.files)
     print(request.form)
     if request.files:
         image = request.files['dripFrame']
-        image.save(os.path.join(base,'arduino.jpg'))
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'],'arduino.jpg'))
         image_helper_google('arduino.jpg')
         return 'Success'
     return 'Failed'
