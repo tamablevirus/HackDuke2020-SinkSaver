@@ -65,7 +65,7 @@ def should_send_reminder(label_ann):
             else:
                 print("CHECKING TIME DIFFERENCE")
                 delt = datetime.now() - session['last_time_water_running']
-                if delt.days==0 and (delt.hour>0 or delt.seconds>=10):
+                if delt.days==0 and delt.seconds>=10:
                     session['last_time_water_running'] = -1
                     return True
                 #Days should never be greater than 0, but in case it does happen somehow
