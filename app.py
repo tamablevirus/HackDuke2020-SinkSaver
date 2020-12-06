@@ -3,6 +3,8 @@ import csv
 import os
 import sys 
 from google.cloud import vision
+from twilio.rest import Client
+
 
 app = Flask(__name__)
 app.secret_key = "asdfasfdasfdsafasddfsadfasdfsadfdas"
@@ -11,6 +13,7 @@ base = os.getcwd()
 
 client = vision.ImageAnnotatorClient.from_service_account_file(
     os.path.normpath(os.path.normpath(base + '/sinksaver-82c12b4843e4.json')))
+twilio_client = Client('AC12f0e70d75c3f685834f3c3de9ac888c','98325208aaeb18c12cb3b8ec8fbefc04')
 
 @app.route('/')
 def hello_world():
@@ -39,11 +42,14 @@ def image_helper_google(image):
     }
     resp = client.annotate_image({
   'image': {'source': {'image_uri': 'https://sink-saver.herokuapp.com/image/'+image}},
-  'features': [{'type_': vision.Feature.Type.FACE_DETECTION}]
+  'features': [{'type_': vision.Feature.Type.LABEL_DETECTION}]
 })
 
+    print(resp.label_annotations)
 
-    print(resp)
+    #Do some stuff here
+
+    #twilio_client.messages.create(to='+19802290745',from_='+19104000202', body='Your sink has running water. Please go turn it off!')
 
 if __name__ == '__main__':
     image_helper_google('test.jpg')
