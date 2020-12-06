@@ -85,5 +85,5 @@ def image_helper_google(image):
 
 if __name__ == '__main__':
     #image_helper_google('test.jpg')
-    session['last_time_water_running'] = -1
+    session.clear()
     app.run()
