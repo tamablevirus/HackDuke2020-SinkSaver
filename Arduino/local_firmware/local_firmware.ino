@@ -209,7 +209,7 @@ void sendToAPI() {
   int HTTP_PORT = 80;
   String HTTP_METHOD = "POST";
   char HOST_NAME = "sink-saver.herokuapp.com/";
-  String PATH_NAME = "content";
+  String PATH_NAME = "upload";
   // String QUERY = String("?file=") + String(packet);
 
   if (client.connect(HOST_NAME, HTTP_PORT)) {
