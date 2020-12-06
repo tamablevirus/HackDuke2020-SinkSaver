@@ -43,6 +43,7 @@ def upload():
 
 def should_send_reminder(label_ann):
     #global last_time_water_running
+    session['last_time_water_running'] = datetime.now()
     for label in label_ann:
         desc = str(label.description).lower()
         if ('finger' in desc or 'hand' in desc or 'dog' in desc or 'paw' in desc or 'cat' in desc or 'toe' in desc) and label.score>=90.000:
