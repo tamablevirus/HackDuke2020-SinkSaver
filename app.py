@@ -13,6 +13,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 base = os.getcwd()
 app.config['UPLOAD_FOLDER'] = base +'/static'
 
+
 client = vision.ImageAnnotatorClient.from_service_account_file(json.loads[os.environ['GOOGLE_SERVICE_ACCOUNT']])
 twilio_client = Client(os.environ['TWILIO_SID'],os.environ['TWILIO_AUTH'])
 
