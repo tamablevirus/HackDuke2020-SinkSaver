@@ -28,7 +28,7 @@ def hello_world():
 def getImage(name):
     return send_file(name, mimetype="image")
 @app.route("/upload", methods=["POST"])
-def upload(content):
+def upload():
     print(request.files)
     if request.files:
         image = request.files['dripFrame']
