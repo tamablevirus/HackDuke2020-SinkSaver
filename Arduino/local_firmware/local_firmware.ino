@@ -19,9 +19,12 @@ int status = WL_IDLE_STATUS;
 
 char ssid[] = "XXXXXXXXXXXX"; //  your network SSID (name)
 char pass[] = "XXXXXXXXXXXX";    // your network password (use for WPA, or use as key for WEP)
+char packet[255];
 
 int localPort = 7;
 byte broadCastIp[] = { 10,5,5,9 };
+
+byte appIP[] = { 34,203,111,198 };
 
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!
   //ENTER YOUR MAC ADDRESS HERE
@@ -39,6 +42,8 @@ const char* host = "10.5.5.9";
 
 const int httpPort = 80;
 
+const int streamingPort = 8554;
+
 
 void setup(){  
 
@@ -54,8 +59,6 @@ void setup(){
   }
 
 
-// ADD THIS TO LOOP??????????????
-// MAKE ITS OWN FUNCTION???????
 
   // attempt to connect to Wifi network:
   while ( status != WL_CONNECTED) {
@@ -76,29 +79,29 @@ void setup(){
 
 
 void loop(){
-
-// Add code to check to see if wifi is still on. If not, stop and keep trying to connect
-
+  
 // WAKE UP CAMERA FROM SLEEP AND CONNECT
 CameraInitiate();
 
-// Add code to make sure that camera recognized (status 31)
+
+// START STREAM
+StartStream();
+
+//SEND TO API
+
+delay(1000);
+
+// STREAM TO DRIP API
+sendToAPI();
 
 
-// START RECORDING
-StartRecording();
-
-delay(5000);
-
-// STOP RECORDING
-StopRecording();
 
 delay(5000);
 
 }
 
 
-void StartRecording(){
+void StartStream(){
   Serial.print("connecting to ");
   Serial.println(host);
 
@@ -107,36 +110,17 @@ void StartRecording(){
     return;
   }
 
-  //Command for starting recording
-  String StartUrl = "/gp/gpControl/command/shutter?p=1";
+  //Command for starting streaming
+  String StartUrl = "/gp/gpControl/execute?p1=gpStream&a1=proto_v2&c1=restart ";
   Serial.print("Requesting URL: ");
   Serial.println(StartUrl);
   client.print(String("GET ") + StartUrl + " HTTP/1.1\r\n" +
   "Host: " + host + "\r\n" +
   "Connection: close\r\n\r\n");
-  Serial.println("Recording");
+  Serial.println("Streaming");
 }
 
 
-
-void StopRecording(){
-  Serial.print("connecting to ");
-  Serial.println(host);
-  
-  if (!client.connect("10.5.5.9", httpPort)) {
-    Serial.println("connection failed");
-    return;
-  }
-
-  //Command for stopping recording
-  String StopUrl = "/gp/gpControl/command/shutter?p=0";
-  Serial.print("Requesting URL: ");
-  Serial.println(StopUrl);
-  client.print(String("GET ") + StopUrl + " HTTP/1.1\r\n" +
-  "Host: " + host + "\r\n" +
-  "Connection: close\r\n\r\n");
-  Serial.println("Stopped");
-}
 
 
 
@@ -202,6 +186,57 @@ void SendMagicPacket(){
   Udp.beginPacket(broadCastIp, wolPort);
   Udp.write(magicPacket, sizeof magicPacket);
   Udp.endPacket();
+
+}
+
+
+//Function to send camera's UDP stream to online API using HTTP
+void sendToAPI() {
+
+  int packetSize = Udp.parsePacket();
+  if (packetSize) {
+    Serial.print("Received Camera Data! Size: ");
+    Serial.println(packetSize);
+    int len = Udp.read(packet, 255);
+    if (len > 0)
+    {
+      packet[len] = '\0';
+    }
+  }
+
+  Serial.println("Packet Received, broadcasting.");
+
+  int HTTP_PORT = 80;
+  String HTTP_METHOD = "POST";
+  char HOST_NAME = "sink-saver.herokuapp.com/";
+  String PATH_NAME = "content";
+  // String QUERY = String("?file=") + String(packet);
+
+  if (client.connect(HOST_NAME, HTTP_PORT)) {
+    Serial.println("Connected to server.");
+
+    client.println(HTTP_METHOD + " " + PATH_NAME + " HTTP/1.1");
+    client.println("Host: " + String(HOST_NAME));
+    client.println("Connection: close");
+    client.println(); // end HTTP request header
+
+    // client.println(QUERY);
+
+    while(client.connected()) {
+      if(client.available()) {
+        client.write(packet);
+      }
+    } 
+    
+  } else {
+    Serial.println("Connection failed!");
+  }
+
+  
+
+}
+
+
 
 }
 
