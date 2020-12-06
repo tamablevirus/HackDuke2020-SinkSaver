@@ -6,7 +6,6 @@ from google.cloud import vision
 from twilio.rest import Client
 from datetime import datetime
 
-
 app = Flask(__name__)
 app.secret_key = "asdfasfdasfdsafasddfsadfasdfsadfdas"
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
