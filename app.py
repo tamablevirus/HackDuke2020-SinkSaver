@@ -27,7 +27,7 @@ def hello_world():
 @app.route("/image/<name>", methods=["GET"])
 def getImage(name):
     return send_file(name, mimetype="image")
-@app.route("/upload/<content>", methods=["POST"])
+@app.route("/upload", methods=["POST"])
 def upload(content):
     print(request.files)
     if request.files:
