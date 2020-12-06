@@ -39,11 +39,10 @@ def image_helper_google(image):
     }
     resp = client.annotate_image({
   'image': {'source': {'image_uri': 'https://sink-saver.herokuapp.com/image/'+image}},
-  'features': [{'type_': vision.Feature.Type.FACE_DETECTION}]
+  'features': [{'type_': vision.Feature.Type.LABEL_DETECTION}]
 })
 
-
-    print(resp)
+    print(resp.label_annotations)
 
 if __name__ == '__main__':
     image_helper_google('test.jpg')

@@ -7,3 +7,4 @@ flask_session
 dnspython
 flask_pymongo
 google-cloud-vision
+twilio
