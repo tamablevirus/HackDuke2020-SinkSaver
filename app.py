@@ -14,7 +14,7 @@ base = os.getcwd()
 app.config['UPLOAD_FOLDER'] = base +'/static'
 
 
-client = vision.ImageAnnotatorClient.from_service_account_json(os.environ['GOOGLE_SERVICE_ACCOUNT'])
+client = vision.ImageAnnotatorClient.from_service_account_file(base+'/key.json')
 twilio_client = Client(os.environ['TWILIO_SID'],os.environ['TWILIO_AUTH'])
 
 last_time_water_running = -1
