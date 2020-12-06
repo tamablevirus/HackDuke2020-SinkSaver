@@ -11,6 +11,7 @@ app = Flask(__name__)
 app.secret_key = "asdfasfdasfdsafasddfsadfasdfsadfdas"
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 base = os.getcwd()
+app.config['UPLOAD_FOLDER'] = base
 
 client = vision.ImageAnnotatorClient.from_service_account_file(
     os.path.normpath(os.path.normpath(base + '/sinksaver-82c12b4843e4.json')))
@@ -20,13 +21,7 @@ last_time_water_running = -1
 
 @app.route('/')
 def hello_world():
-    client = vision.ImageAnnotatorClient.from_service_account_file(
-        os.path.normpath(os.path.normpath(base + '/sinksaver-82c12b4843e4.json')))
-    response = client.annotate_image({
-        'image' : {'source' : {'image_uri' : "https://sink-saver.herokuapp.com/image"}}
-    })
-    print(response, flush=True)
-    return 'Hello World!'
+    return 'The website is not intended to be used like this'
 
 
 @app.route("/image/<name>", methods=["GET"])
@@ -38,6 +33,8 @@ def upload(content):
         image = request.files['dripFrame']
         image.save(os.path.join(base,'arduino.jpg'))
         image_helper_google('arduino.jpg')
+        return 'Success'
+    return 'Failed'
 
 def should_send_reminder(label_ann):
     global last_time_water_running
