@@ -13,10 +13,13 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 base = os.getcwd()
 app.config['UPLOAD_FOLDER'] = base +'/static'
 
-with open(os.path.join(app.config['UPLOAD_FOLDER'],'jkslzm.json'), 'w') as json_fi:
+import random
+import string
+json_file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+with open(os.path.join(app.config['UPLOAD_FOLDER'],json_file_name+'.json'), 'w') as json_fi:
     json.dump(json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS']), json_fi)
 
-client = vision.ImageAnnotatorClient.from_service_account_file(os.path.join(app.config['UPLOAD_FOLDER'],'jkslzm.json'))
+client = vision.ImageAnnotatorClient.from_service_account_file(os.path.join(app.config['UPLOAD_FOLDER'],json_file_name+'.json'))
 twilio_client = Client(os.environ['TWILIO_SID'],os.environ['TWILIO_AUTH'])
 
 #last_time_water_running = -1
