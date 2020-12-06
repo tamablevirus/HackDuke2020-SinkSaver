@@ -51,10 +51,11 @@ def should_send_reminder(label_ann):
     for label in label_ann:
         desc = str(label.description).lower()
         print("LOOKING... " +desc + ","+str(label.score))
-        if ('finger' in desc or 'hand' in desc or 'dog' in desc or 'paw' in desc or 'cat' in desc or 'toe' in desc) and label.score>=.90000:
+        if ('finger' in desc or 'hand' in desc or 'dog' in desc or 'paw' in desc or 'cat' in desc or 'toe' in desc) and label.score>=0.90000:
             print("OBSTRUCTION FOUND")
             session['last_time_water_running'] = -1
             return False
+
         if ('liquid' in desc and label.score>=0.90000) or ('fluid' in desc and label.score>=0.90000):
             print("OBSTRUCTION NOT FOUND")
             if type(session['last_time_water_running']) is int:
