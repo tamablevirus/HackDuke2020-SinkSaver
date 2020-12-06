@@ -30,10 +30,10 @@ def getImage(name):
 @app.route("/upload", methods=["POST"])
 def upload():
     print(request.files)
-    print(request.form)
     if request.files:
         image = request.files['dripFrame']
         image.save(os.path.join(app.config['UPLOAD_FOLDER'],'arduino.jpg'))
+        print('LAST DATE: ' + last_time_water_running)
         image_helper_google('arduino.jpg')
         return 'Success'
     return 'Failed'
@@ -69,6 +69,7 @@ def image_helper_google(image):
     #print(resp.label_annotations[0].description)
 
     if should_send_reminder(resp.label_annotations):
+        print('SENDING TEXT....')
         twilio_client.messages.create(to='+19802290745',from_='+19104000202', body='[SinkSaver] Your sink has running water unattended. Please go turn it off!')
 
 if __name__ == '__main__':
