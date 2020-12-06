@@ -14,7 +14,7 @@ base = os.getcwd()
 
 client = vision.ImageAnnotatorClient.from_service_account_file(
     os.path.normpath(os.path.normpath(base + '/sinksaver-82c12b4843e4.json')))
-twilio_client = Client('AC12f0e70d75c3f685834f3c3de9ac888c','98325208aaeb18c12cb3b8ec8fbefc04')
+twilio_client = Client(os.environ['TWILIO_SID'],os.environ['TWILIO_AUTH'])
 
 last_time_water_running = -1
 
