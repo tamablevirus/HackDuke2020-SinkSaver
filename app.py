@@ -95,7 +95,7 @@ def image_helper_google(image):
     if should_send_reminder(resp.label_annotations):
         print('SENDING TEXT....')
         #Send text
-        twilio_client.messages.create(to='+19802290745',from_='+19104000202',
+        twilio_client.messages.create(to=os.environ['TO_NUMBER'],from_='+19104000202',
                                       body='[SinkSaver] Your sink has running water unattended. Please go turn it off!')
 
 if __name__ == '__main__':
