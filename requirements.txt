@@ -1,1 +1,8 @@
+pymongo
 flask
+flask_discord
+gunicorn
+flask-talisman
+flask_session
+dnspython
+flask_pymongo
