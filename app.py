@@ -1,4 +1,4 @@
-from flask import Flask, request,url_for, send_file
+from flask import Flask, request,url_for, send_file, session
 import csv
 import os
 import json
@@ -17,7 +17,7 @@ app.config['UPLOAD_FOLDER'] = base +'/static'
 client = vision.ImageAnnotatorClient.from_service_account_file(base+'/key.json')
 twilio_client = Client(os.environ['TWILIO_SID'],os.environ['TWILIO_AUTH'])
 
-last_time_water_running = -1
+#last_time_water_running = -1
 
 @app.route('/')
 def hello_world():
@@ -30,33 +30,36 @@ def getImage(name):
 @app.route("/upload", methods=["POST"])
 def upload():
     print(request.files)
+    #global last_time_water_running
     if request.files:
+        if not(session['last_time_water_running']):
+            session['last_time_water_running'] = -1
         image = request.files['dripFrame']
         image.save(os.path.join(app.config['UPLOAD_FOLDER'],'arduino.jpg'))
-        print('LAST DATE: ' + str(last_time_water_running))
+        print('LAST DATE: ' + str(session['last_time_water_running']))
         image_helper_google('arduino.jpg')
         return 'Success'
     return 'Failed'
 
 def should_send_reminder(label_ann):
-    global last_time_water_running
+    #global last_time_water_running
     for label in label_ann:
         desc = str(label.description).lower()
         if ('finger' in desc or 'hand' in desc or 'dog' in desc or 'paw' in desc or 'cat' in desc or 'toe' in desc) and label.score>=90.000:
-            last_time_water_running = -1
+            session['last_time_water_running'] = -1
             return False
         if ('liquid' in desc and label.score>=90.000) or ('fluid' in desc and label.score>=90.000):
-            if type(last_time_water_running) is int:
-                last_time_water_running = datetime.now()
+            if type(session['last_time_water_running']) is int:
+                session['last_time_water_running'] = datetime.now()
                 return False
             else:
-                delt = datetime.now() - last_time_water_running
+                delt = datetime.now() - session['last_time_water_running']
                 if delt.days==0 and delt.seconds>=10:
-                    last_time_water_running = -1
+                    session['last_time_water_running'] = -1
                     return True
                 #Days should never be greater than 0, but in case it does happen somehow
                 elif delt.days>0:
-                    last_time_water_running = -1
+                    session['last_time_water_running'] = -1
                     return True
     return False
 
