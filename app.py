@@ -31,6 +31,7 @@ def image_helper_google(image):
   'features': [{'type_': vision.Feature.Type.FACE_DETECTION}]
 })
 
+
     print(resp)
 
 if __name__ == '__main__':
