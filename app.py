@@ -32,7 +32,7 @@ def upload():
     print(request.files)
     #global last_time_water_running
     if request.files:
-        if not(session['last_time_water_running']):
+        if not('last_time_water_running' in session.keys()):
             session['last_time_water_running'] = -1
         image = request.files['dripFrame']
         image.save(os.path.join(app.config['UPLOAD_FOLDER'],'arduino.jpg'))
