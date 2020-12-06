@@ -59,6 +59,7 @@ def should_send_reminder(label_ann):
                 elif delt.days>0:
                     last_time_water_running = -1
                     return True
+    return False
 
 def image_helper_google(image):
     resp = client.annotate_image({
