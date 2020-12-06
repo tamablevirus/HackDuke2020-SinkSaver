@@ -6,4 +6,4 @@ flask-talisman
 flask_session
 dnspython
 flask_pymongo
-csv
+google-cloud-vision
