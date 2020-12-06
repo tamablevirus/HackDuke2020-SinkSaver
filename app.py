@@ -29,6 +29,7 @@ def getImage(name):
     return send_file(name, mimetype="image")
 @app.route("/upload/<content>", methods=["POST"])
 def upload(content):
+    print(request.files)
     if request.files:
         image = request.files['dripFrame']
         image.save(os.path.join(base,'arduino.jpg'))
