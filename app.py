@@ -33,7 +33,7 @@ def upload():
     if request.files:
         image = request.files['dripFrame']
         image.save(os.path.join(app.config['UPLOAD_FOLDER'],'arduino.jpg'))
-        print('LAST DATE: ' + last_time_water_running)
+        print('LAST DATE: ' + str(last_time_water_running))
         image_helper_google('arduino.jpg')
         return 'Success'
     return 'Failed'
