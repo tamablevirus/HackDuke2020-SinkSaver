@@ -55,7 +55,7 @@ def should_send_reminder(label_ann):
             print("OBSTRUCTION FOUND")
             session['last_time_water_running'] = -1
             return False
-        if ('liquid' in desc and label.score>=90.000) or ('fluid' in desc and label.score>=90.000):
+        if ('liquid' in desc and label.score>=0.90000) or ('fluid' in desc and label.score>=0.90000):
             print("OBSTRUCTION NOT FOUND")
             if type(session['last_time_water_running']) is int:
                 session['last_time_water_running'] = datetime.now()
