@@ -1,0 +1,1 @@
+Note: `arduino.jpg` is an *actual* image sent to our server from the Arduino UNO. `test.jpg` was just a test image we used that was taken by a phone camera in order to test Google's Vision API labels feature.
